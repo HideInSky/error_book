@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/hostFragment">
+
+    <fragment
+        android:id="@+id/hostFragment"
+        android:name="com.example.error_book.fragment.HostFragment"
+        android:label="HostFragment"
+        tools:layout="@layout/fragment_host">
+        <action
+            android:id="@+id/action_hostFragment_to_captureFragment"
+            app:destination="@id/captureFragment"
+            app:enterAnim="@anim/slide_in_left"
+            app:exitAnim="@anim/fade_in" />
+        <action
+            android:id="@+id/action_hostFragment_to_recyclerFragment"
+            app:destination="@id/recyclerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/captureFragment"
+        android:name="com.example.error_book.fragment.CaptureFragment"
+        android:label="CaptureFragment" />
+    <fragment
+        android:id="@+id/recyclerFragment"
+        android:name="com.example.error_book.fragment.RecyclerFragment"
+        android:label="RecyclerFragment" />
+</navigation>
