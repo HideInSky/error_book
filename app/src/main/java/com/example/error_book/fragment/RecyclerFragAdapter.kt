@@ -33,12 +33,12 @@ class RecyclerFragAdapter() : RecyclerView.Adapter<RecyclerFragAdapter.BookViewH
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val view = layoutInflater
-            .inflate(R.layout.text_item_view, parent, false) as TextView
+            .inflate(R.layout.text_book_name_view, parent, false) as TextView
         return BookViewHolder(view)
     }
 
     class BookViewHolder (itemView: View): RecyclerView.ViewHolder(itemView){
-        val textView : TextView = itemView.findViewById(R.id.txt_item_view)
+        val textView : TextView = itemView.findViewById(R.id.txt_book_name)
     }
 
 
