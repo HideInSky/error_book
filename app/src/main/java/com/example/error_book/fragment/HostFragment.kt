@@ -1,5 +1,8 @@
 package com.example.error_book.fragment
 
+import ADDING_BOOK_NOW
+import ADD_BOOK_CODE
+import BOOK_NAME_LIST_KEY
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -14,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import bookNames
 import com.example.error_book.R
+import com.example.error_book.data.BookNameListDataManager
 import com.example.error_book.databinding.FragmentHostBinding
 
 
@@ -29,12 +33,10 @@ class HostFragment : Fragment() {
         val binding: FragmentHostBinding = DataBindingUtil.
         inflate(inflater, R.layout.fragment_host, container, false)
 
-        // create a string list for store book names
-        bookNames = ArrayList<String>()
-        bookNames.add("数学")
+
 
         // recycler adapter
-        val adapter = HostBookAdapter(bookNames)
+        val adapter = HostBookAdapter()
         val recyclerView = binding.recyclerBook
         recyclerView.adapter = adapter
 
@@ -48,15 +50,17 @@ class HostFragment : Fragment() {
 //                        linearLayoutManager.orientation)
 //        recyclerView.addItemDecoration(mDividerItemDecoration)
 
+        // get book names from sharedReferences in dataManager
+        bookNames = BookNameListDataManager(activity!!).readList(BOOK_NAME_LIST_KEY)
 
         // set on click listener to create books
         binding.fabAddBook.setOnClickListener{
             // if it is not adding book, add book
             // if it is adding book, prohibit users from adding multiple books at a time
-            if (!HostBookAdapter.ADDING_BOOK_NOW){
-                HostBookAdapter.ADDING_BOOK_NOW = true
-                bookNames.add(HostBookAdapter.ADD_BOOK_CODE)
-                adapter.notifyDataSetChanged()
+            if (!ADDING_BOOK_NOW){
+                ADDING_BOOK_NOW = true
+                bookNames.add(ADD_BOOK_CODE)
+                adapter.notifyItemInserted(bookNames.size-1)
             }
         }
 

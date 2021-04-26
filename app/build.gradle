@@ -35,6 +35,11 @@ android {
 }
 
 dependencies {
+    // shared preference
+    implementation 'androidx.preference:preference:1.1.0'
+    // json
+    implementation 'com.google.code.gson:gson:2.8.5'
+
     //navigation
     implementation "android.arch.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "android.arch.navigation:navigation-ui-ktx:$version_navigation"

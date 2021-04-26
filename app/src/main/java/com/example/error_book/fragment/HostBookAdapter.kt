@@ -1,5 +1,10 @@
 package com.example.error_book.fragment
 
+import ADDING_BOOK_NOW
+import ADD_BOOK_CODE
+import BOOK_NAME_LIST_KEY
+import DEFAULT_BOOK_NAME
+import STATIC_NUM
 import android.content.Context
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,26 +16,21 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import bookNames
 import com.example.error_book.R
+import com.example.error_book.data.BookNameListDataManager
 import hideKeyboard
 import showKeyboard
 
-class HostBookAdapter(bookNames: ArrayList<String>) : RecyclerView.Adapter<HostBookAdapter.ViewHolder>()
+class HostBookAdapter() : RecyclerView.Adapter<HostBookAdapter.ViewHolder>()
 {
-    var bookNames:ArrayList<String> = bookNames
+
     // set the view type of view holder
     companion object{
         private const val TYPE_BOOK = 0
         private const val TYPE_ADD_BOOK = 1
-        val ADD_BOOK_CODE : String = "This is add book code"
-        val DEFAULT_BOOK_NAME : String = "New Book "
-        var STATIC_NUM: Int = 1
-        var ADDING_BOOK_NOW: Boolean = false
     }
 
-    interface EventListener {
-        fun onEvent(data: Int)
-    }
 
     override fun onCreateViewHolder(
             parent: ViewGroup,
@@ -89,22 +89,29 @@ class HostBookAdapter(bookNames: ArrayList<String>) : RecyclerView.Adapter<HostB
 
         when (holder) {
             is BookViewHolder -> {
+                // if it is normal book name view, set text to [item]
                 holder.textView.text = item
-                holder.textView.visibility = VISIBLE
             }
             is AddBookViewHolder -> {
+                // if the book name view contains ADD_BOOK_CODE, it should show the editText and
+                // hide the textView
                 ADDING_BOOK_NOW = true
-                holder.textView.visibility = INVISIBLE
+                holder.textView.text = ""
                 holder.editText.apply {
                     visibility = VISIBLE
                     showKeyboard()
+                    // make the cursor focus on current editText
+                    // remember to make the current editText maxLine = 1
                     requestFocus()
                     requestFocusFromTouch()
-                    setText("")
+                    // set original text as ""
+//                    setText("")
+                    // if the user presses enter
                     setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
                         if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP) {
-
+                            // get one-line text (bookName) that user typed
                             val text_user: String = holder.editText.text.toString()
+                            // if user does not input anything, give a default bookName
                             if (text_user == ""){
                                 val default_book_name : String = DEFAULT_BOOK_NAME + STATIC_NUM
                                 bookNames.set(position, default_book_name)
@@ -114,7 +121,11 @@ class HostBookAdapter(bookNames: ArrayList<String>) : RecyclerView.Adapter<HostB
                                 bookNames.set(position, text_user)
                                 holder.textView.text = text_user
                             }
-                            holder.textView.visibility = VISIBLE
+                            // use datamanager method to preserve the data user input
+                            // in case of the app crashes
+                            BookNameListDataManager(holder.editText.context).
+                            saveList(bookNames, BOOK_NAME_LIST_KEY)
+                            // make textview visible and hide edittext
                             holder.editText.visibility = GONE
                             hideKeyboard()
                             ADDING_BOOK_NOW = false
